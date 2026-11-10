@@ -1,0 +1,40 @@
+IMPERIO CDS - CHECKOUT PIX SYNCPAY
+
+O projeto precisa de uma hospedagem que execute Node.js. Nao publique somente o index.html como site estatico.
+
+LOCAL
+1. Copie .env.example para .env.
+2. No .env local, preencha SYNCPAY_CLIENT_ID e SYNCPAY_CLIENT_SECRET com as credenciais da API SyncPay.
+3. Troque WEBHOOK_SECRET por um segredo longo e unico. Nao compartilhe esse valor.
+4. Deixe PUBLIC_URL vazio para apenas abrir o site localmente.
+5. Execute npm install e depois npm.cmd run dev.
+6. Abra http://localhost:3000.
+
+CONFIGURAR O WEBHOOK DEPOIS DE HOSPEDAR
+1. Publique a aplicacao em uma hospedagem Node.js. No Render, crie um Web Service ligado ao repositorio, com Build Command npm install e Start Command npm start.
+2. No painel de ambiente da hospedagem, cadastre SYNCPAY_CLIENT_ID, SYNCPAY_CLIENT_SECRET e WEBHOOK_SECRET. Nao envie o arquivo .env para o repositorio.
+3. Copie a URL HTTPS principal fornecida pela hospedagem e cadastre-a como PUBLIC_URL. Exemplo: https://seu-site.onrender.com
+   Coloque somente a URL base: sem /api, sem /api/syncpay-webhook e sem barra no final.
+4. O sistema monta automaticamente a callback como:
+   PUBLIC_URL/api/syncpay-webhook?key=WEBHOOK_SECRET
+   Nao e necessario colar esse caminho manualmente no painel SyncPay: cada nova cobranca envia webhook_url para a SyncPay.
+5. Salve as variaveis e publique/reinicie o servico.
+6. Confira https://seu-site.onrender.com/api/health. A resposta esperada e {"ok":true}.
+7. Gere um Pix novo para testar. Cobrancas criadas antes de configurar PUBLIC_URL nao recebem essa callback.
+
+TUNEL PARA TESTE LOCAL
+1. Deixe npm.cmd run dev rodando.
+2. Em outro terminal, execute cloudflared tunnel --url http://localhost:3000.
+3. Copie o endereco HTTPS trycloudflare.com retornado para PUBLIC_URL no .env local.
+4. Reinicie npm.cmd run dev e gere um Pix novo. Mantenha o tunel aberto.
+
+ARMAZENAMENTO DE PEDIDOS
+Localmente, os pedidos sao salvos em orders.json. Em hospedagem com disco persistente, configure ORDERS_FILE=/var/data/orders.json e monte o disco em /var/data. Em hospedagens sem armazenamento persistente, pedidos podem ser perdidos quando o servico reiniciar. O plano gratuito do Render nao oferece disco persistente e pode suspender o servico ocioso; use-o apenas para demonstracao.
+
+ENTREGA POR E-MAIL
+O projeto mostra os links de entrega depois da confirmacao, mas ainda nao envia e-mail automaticamente. Isso exige integrar um provedor de e-mail.
+
+DADOS DO PRODUTO
+Preco: R$ 9,99.
+Nome fixo enviado a SyncPay: repertoriomusical.
+Links de entrega sao definidos em index.html, na secao deliveryPanel.

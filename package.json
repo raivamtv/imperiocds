@@ -1,0 +1,19 @@
+{
+  "name": "imperio-cds-syncpay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Checkout PIX SyncPay para Imperio CDs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4"
+  }
+}
